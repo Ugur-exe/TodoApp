@@ -48,11 +48,10 @@ class TodoEditFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val argsId=TodoEditFragmentArgs.fromBundle(requireArguments()).id
-
-
-
+        binding.BackArrowIcon.setOnClickListener{
+            fragmentManager?.popBackStack()
+        }
        mDisposable.add(
            todoDao.get(argsId).observeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                .subscribe(this::handleResponse)
@@ -75,22 +74,17 @@ class TodoEditFragment : Fragment() {
     private fun updateTask(view: View){
         val title = binding.titleEditText.text.toString()
         val subtitle = binding.detailEditText.text.toString()
-
-        // Güncellenen kaydın id'sini kullanarak yeni bir TodoTask oluşturun
+        val argsId=TodoEditFragmentArgs.fromBundle(requireArguments()).id
         val todoTask = TodoTask( title = title, subtitle = subtitle)
-        Log.d("UpdateTask", "Güncellenen Task: $todoTask")
+
         mDisposable.add(
-            todoDao.update(todoTask)
+            todoDao.updateId(argsId,title,subtitle)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Log.d("UpdateTask", "Güncelleme başarılı")
-                    // Güncelleme başarılı olduğunda yapılacak işlemler
-                    println(title+subtitle)
+                    fragmentManager?.popBackStack()
                     Toast.makeText(context, "Görev güncellendi", Toast.LENGTH_SHORT).show()
-
                 }, {
-                    // Güncelleme başarısız olduğunda yapılacak işlemler
                     Toast.makeText(context, "Güncelleme başarısız oldu", Toast.LENGTH_SHORT).show()
                 })
         )

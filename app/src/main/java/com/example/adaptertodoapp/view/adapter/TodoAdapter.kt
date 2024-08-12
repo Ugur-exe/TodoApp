@@ -42,7 +42,7 @@ class TodoAdapter(val taskList:List<TodoTask>,  private val listener: OnItemClic
 
     override fun onBindViewHolder(holder: TodoAdapterViewHolder, position: Int,) {
 
-        holder.binding.todoTitle.text="${taskList[position].title}+ ${taskList[position].id}"
+        holder.binding.todoTitle.text=taskList[position].title
         holder.binding.todoSubTitle.text=taskList[position].subtitle
 
         holder.itemView.setOnClickListener {

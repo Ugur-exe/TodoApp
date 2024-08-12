@@ -25,4 +25,7 @@ interface TodoDAO {
 
    @Update
    fun update(todoTask: TodoTask):Completable
+
+    @Query("Update TodoTask SET title = :title, subtitle = :subtitle WHERE id = :id")
+    fun updateId(id: Int,title:String,subtitle:String): Completable
 }
